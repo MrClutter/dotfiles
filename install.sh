@@ -13,7 +13,7 @@ fonts-hack-ttf
 
 for PACKAGE in ${PACKAGES[@]}; do
     echo "Installing $PACKAGE"
-    sudo apt install $PACKAGE
+    sudo apt install $PACKAGE -y
     echo ""
 done
 
@@ -40,7 +40,7 @@ for FILE in ${FILES[@]}; do
 		if [ -f "$HOME/$FILE" ]; then
 			echo "$HOME/$FILE already exist diff:"
 			diff  -s "$PWD/$FILE" "$HOME/$FILE"
-			read -e -p "Do you want to replace existing file? (y/n): " INPUT
+			read -e -p "Do you want to replace existing $FILE file? (y/n): " INPUT
 			if [[ $INPUT == 'y' || $INPUT == 'Y' ]]; then
 				replaceFile $FILE
 			else
