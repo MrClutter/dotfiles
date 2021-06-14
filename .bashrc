@@ -89,7 +89,7 @@ if ${use_color} ; then
 		PS1="$RED[\h]$WHITE-[$BLUE\w$WHITE]\r\n \$$BASE "
 	else
 #        PS1="$GREEN[\u@\h]$WHITE-[$BLUE\w$WHITE]-[\[\033[38;5;95m\]$tun0IP$WHITE]\r\n \$$BASE "
-        PS1="$GREEN[\u@\h]$WHITE-[$BLUE\w$WHITE]\r\n \$$BASE "
+        PS1="$RED┌─[$BASE\u$BLUE@$GREEN\h$RED]$WHITE-[$BLUE\w$WHITE]\r\n$RED└──╼ $BLUE\$$BASE "$
 	fi
 
     unset RED GREEN BLUE WHITE tun0IP
