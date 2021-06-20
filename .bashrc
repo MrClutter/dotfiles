@@ -1,164 +1,148 @@
-#
-# ~/.bashrc
-#
+" TODO fix virtual env support for python
 
-[[ $- != *i* ]] && return
+set nocompatible
+set ruler
+set number
+set relativenumber
+set smartcase
 
-colors() {
-	local fgc bgc vals seq0
+set wildmenu
 
-	printf "Color escapes are %s\n" '\e[${value};...;${value}m'
-	printf "Values 30..37 are \e[33mforeground colors\e[m\n"
-	printf "Values 40..47 are \e[43mbackground colors\e[m\n"
-	printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
+set path+=**
+set clipboard=unnamed
 
-	# foreground colors
-	for fgc in {30..37}; do
-		# background colors
-		for bgc in {40..47}; do
-			fgc=${fgc#37} # white
-			bgc=${bgc#40} # black
+set encoding=utf-8
 
-			vals="${fgc:+$fgc;}${bgc}"
-			vals=${vals%%;}
+let mapleader=" "
 
-			seq0="${vals:+\e[${vals}m}"
-			printf "  %-9s" "${seq0:-(default)}"
-			printf " ${seq0}TEXT\e[m"
-			printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
-		done
-		echo; echo
-	done
-}
+let python_highlight_all=1
+syntax on
 
-[ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
+set mouse=a
 
-# Change the window title of X terminals
-case ${TERM} in
-	xterm*|rxvt*|Eterm*|aterm|kterm|gnome*|interix|konsole*)
-		PROMPT_COMMAND='echo -ne "\033]0;${USER}@${DIRNAME%%.*}:${PWD/#$HOME/\~}\007"'
-		;;
-	screen*)
-		PROMPT_COMMAND='echo -ne "\033_${USER}@${DIRNAME%%.*}:${PWD/#$HOME/\~}\033\\"'
-		;;
-esac
+" Display white characters
+set list
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:< 
+noremap <F5> :set list!<CR>
 
+" Font configuration
+if has("gui_running")
+  if has("gui_gtk2")
+    set guifont=Inconsolata\ 12
+  elseif has("gui_macvim")
+    set guifont=Menlo\ Regular:h14
+  elseif has("gui_win32")
+    set guifont=Consolas:h11:cANSI
+  endif
+endif
 
-use_color=true
+" If editing Python bind F9 to exec
+autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 
-# Set colorful PS1 only on colorful terminals.
-# dircolors --print-database uses its own built-in database
-# instead of using /etc/DIR_COLORS.  Try to use the external file
-# first to take advantage of user additions.  Use internal bash
-# globbing instead of external grep binary.
-safe_term=${TERM//[^[:alnum:]]/?}   # sanitize TERM
-match_lhs=""
-[[ -f ~/.dir_colors   ]] && match_lhs="${match_lhs}$(<~/.dir_colors)"
-[[ -f /etc/DIR_COLORS ]] && match_lhs="${match_lhs}$(</etc/DIR_COLORS)"
-[[ -z ${match_lhs}    ]] \
-	&& type -P dircolors >/dev/null \
-	&& match_lhs=$(dircolors --print-database)
-[[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] && use_color=true
+" Split configuration 
+	set splitbelow
+	set splitright
+	nnoremap <C-J> <C-W><C-J>
+	nnoremap <C-K> <C-W><C-K>
+	nnoremap <C-L> <C-W><C-L>
+	noremap <C-H> <C-W><C-H>
 
-if ${use_color} ; then
-	# Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
-	if type -P dircolors >/dev/null ; then
-		if [[ -f ~/.dir_colors ]] ; then
-			eval $(dircolors -b ~/.dir_colors)
-		elif [[ -f /etc/DIR_COLORS ]] ; then
-			eval $(dircolors -b /etc/DIR_COLORS)
-		fi
-	fi
+" Jump 3 times more than before
+	noremap <C-e> 3<C-e>
+	noremap <C-y> 3<C-y>
 
-#	if [[ ${EUID} == 0 ]] ; then
-#		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W\[\033[01;31m\]]\$\[\033[00m\] '
-#	else
-#		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W\[\033[01;32m\]]\$\[\033[00m\] '
-#	fi
+" Open tagmenu with F8
+nmap <F8> :TagbarToggle<CR>
 
-#    tun0IP=`ip addr show dev tun0 |grep -oE "[0-9]{1,3}\..*/[0-9]{1,2}"`
-    WHITE="\033[01;37m\]"
-    GREEN="\033[01;32m\]"
-    RED="\033[01;31m\]"
-    BLUE="\033[01;34m\]"
-    BASE="\[\033[00m\]"
+" Enable floding
+set foldmethod=indent
+set foldlevel=99
+" Enable folding with the spacebar
+nnoremap <leader>i za
 
-    
+" PEP 8 indentation for Python
+au BufNewFile, BufRead *.py
+	set tabstop=4
+	set softtabstop=4
+	set shiftwidth=4
+	"set textwidth=79
+	set expandtab
+	set autoindent
+	set fileformat=unix
 
-	if [[ ${EUID} == 0 ]] ; then
-		PS1="$RED[\h]$WHITE-[$BLUE\w$WHITE]\r\n \$$BASE "
-	else
-#        PS1="$GREEN[\u@\h]$WHITE-[$BLUE\w$WHITE]-[\[\033[38;5;95m\]$tun0IP$WHITE]\r\n \$$BASE "
-        PS1="$RED┌─[$BASE\u$BLUE@$GREEN\h$RED]$WHITE-[$BLUE\w$WHITE]\r\n$RED└──╼ $BLUE\$$BASE "$
-	fi
+" Bad spaces
+au BufRead, BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 
-    unset RED GREEN BLUE WHITE tun0IP
+" Gruvbox colorsheme configuration
+	let g:gruvbox_italic = '0'
+	let g:gruvbox_improved_strings = '1'
+	let g:gruvbox_improved_warnings = '1'
+	let g:gruvbox_invert_tabline = '1'
 
-	alias ls='ls --color=auto'
-	alias grep='grep --colour=auto'
-	alias egrep='egrep --colour=auto'
-	alias fgrep='fgrep --colour=auto'
-else
-	if [[ ${EUID} == 0 ]] ; then
-		# show root@ when we don't have colors
-		PS1='\u@\h \W \$ '
-	else
-		PS1='\u@\h \w \$ '
-	fi
-fi
+	set bg=dark
+	colorscheme gruvbox
 
-unset use_color safe_term match_lhs sh
+" Vundle
+	filetype off                  " required
 
-alias cp="cp -i"                          # confirm before overwriting something
-alias df='df -h'                          # human-readable sizes
-alias free='free -m'                      # show sizes in MB
-alias np='nano -w PKGBUILD'
-alias more=less
+	" set the runtime path to include Vundle and initialize
+	set rtp+=~/.vim/bundle/Vundle.vim
+	call vundle#begin()
 
-xhost +local:root > /dev/null 2>&1
+	Plugin 'VundleVim/Vundle.vim'
 
-complete -cf sudo
+	Plugin 'scrooloose/nerdtree'
+	Plugin 'tpope/vim-fugitive'
+	Plugin 'tpope/vim-surround'
+	Plugin 'benmills/vimux'
+	Plugin 'majutsushi/tagbar'
+	Plugin 'itchyny/lightline.vim'
+	Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+	"Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+	Plugin 'vim-syntastic/syntastic'
 
-# Bash won't get SIGWINCH if another process is in the foreground.
-# Enable checkwinsize so that bash will check the terminal size when
-# it regains control.  #65623
-# http://cnswww.cns.cwru.edu/~chet/bash/FAQ (E11)
-shopt -s checkwinsize
-
-shopt -s expand_aliases
-
-# export QT_SELECT=4
-
-# Enable history appending instead of overwriting.  #139609
-shopt -s histappend
-
-#
-# # ex - archive extractor
-# # usage: ex <file>
-ex ()
-{
-  if [ -f $1 ] ; then
-    case $1 in
-      *.tar.bz2)   tar xjf $1   ;;
-      *.tar.gz)    tar xzf $1   ;;
-      *.bz2)       bunzip2 $1   ;;
-      *.rar)       unrar x $1     ;;
-      *.gz)        gunzip $1    ;;
-      *.tar)       tar xf $1    ;;
-      *.tbz2)      tar xjf $1   ;;
-      *.tgz)       tar xzf $1   ;;
-      *.zip)       unzip $1     ;;
-      *.Z)         uncompress $1;;
-      *.7z)        7z x $1      ;;
-      *)           echo "'$1' cannot be extracted via ex()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
-}
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
+	" Python
+	Plugin 'tmhedberg/SimpylFold'
+	Plugin 'vim-scripts/indentpython.vim'
+	" Bundle 'Valloric/YouCompleteMe'
+	Plugin 'nvie/vim-flake8'
+	Plugin 'davidhalter/jedi-vim'
 
 
+	call vundle#end()            " required
+	filetype plugin indent on    " required
+
+" Syntastic
+	set statusline+=%#warningmsg#
+	set statusline+=%{SyntasticStatuslineFlag()}
+	set statusline+=%*
+
+	let g:syntastic_always_populate_loc_list = 1
+	let g:syntastic_auto_loc_list = 1
+	let g:syntastic_check_on_open = 1
+	let g:syntastic_check_on_wq = 0 
+
+" Lightline configuration
+	set noshowmode
+	set laststatus=2	
+	if !has('gui_running')
+		set t_Co=256
+	endif
+
+" SimplyFold
+	let g:SimpylFold_docstring_preview = 1
+
+" YouCompleteMe
+	let g:ycm_autoclose_preview_window_after_completion=1
+	map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+" Python with virtualenv support
+"!python3 << EOF 
+"import os
+"import sys
+"if 'VIRTUAL_ENV' in os.environ:
+"    project_base_dir = os.environ['VIRTUAL_ENV']
+"    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+"    execfile(activate_this, dict(__file__=activate_this))
+"EOF
