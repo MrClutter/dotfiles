@@ -1,3 +1,5 @@
+" TODO fix virtual env support for Python
+
 set nocompatible
 set ruler
 set number
@@ -15,6 +17,13 @@ let mapleader=" "
 
 let python_highlight_all=1
 syntax on
+
+set mouse=a
+
+" Display white characters
+set list
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:< 
+noremap <F5> :set list!<CR>
 
 " Font configuration
 if has("gui_running")
@@ -37,7 +46,7 @@ autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellesca
 	nnoremap <C-J> <C-W><C-J>
 	nnoremap <C-K> <C-W><C-K>
 	nnoremap <C-L> <C-W><C-L>
-	nnoremap <C-H> <C-W><C-H>
+	noremap <C-H> <C-W><C-H>
 
 " Jump 3 times more than before
 	noremap <C-e> 3<C-e>
@@ -90,7 +99,7 @@ au BufRead, BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 	Plugin 'majutsushi/tagbar'
 	Plugin 'itchyny/lightline.vim'
 	Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-	Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+	"Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 	Plugin 'vim-syntastic/syntastic'
 
 	" Python
@@ -129,11 +138,11 @@ au BufRead, BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 	map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " Python with virtualenv support
-python3 << EOF
-import os
-import sys
-if 'VIRTUAL_ENV' in os.environ:
-    project_base_dir = os.environ['VIRTUAL_ENV']
-    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-    execfile(activate_this, dict(__file__=activate_this))
-EOF
+"!python3 << EOF 
+"import os
+"import sys
+"if 'VIRTUAL_ENV' in os.environ:
+"    project_base_dir = os.environ['VIRTUAL_ENV']
+"    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+"    execfile(activate_this, dict(__file__=activate_this))
+"EOF
