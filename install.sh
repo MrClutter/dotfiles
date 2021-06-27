@@ -59,10 +59,14 @@ done
 
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
+# Install Tmux Plugin Manager
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 # Install gruvbox
 
 git clone https://github.com/morhetz/gruvbox ~/.vim/colors/gruvbox
 cp ~/.vim/colors/gruvbox/colors/gruvbox.vim ~/.vim/colors
 
 echo "Remember to run PluginInstall in vim and gruvebox_256palette.sh"
+echo "Pres <prefix> + I to install tmux plugins"
 
