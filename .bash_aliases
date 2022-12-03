@@ -5,5 +5,5 @@ alias ll="ls -lh"
 alias l="ls -CF"
 
 # fix for gruvbox vim artifacts
-bash ~/.vim/colors/gruvbox_256palette.sh
+bash ~/.vim/colors/gruvbox/gruvbox_256palette.sh
 
