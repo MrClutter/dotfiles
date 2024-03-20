@@ -1,0 +1,13 @@
+USE_POWERLINE="true"
+
+### aliases
+alias ip="ip -c"
+alias la="ls -a"
+alias ll="ls -lh"
+alias l="ls -CF"
+
+alias tmux="tmux -u" # https://askubuntu.com/questions/410048/utf-8-character-not-showing-properly-in-tmux
+eval "$(zoxide init zsh --cmd cd)"
+bindkey '^ ' autosuggest-accept
+
+
