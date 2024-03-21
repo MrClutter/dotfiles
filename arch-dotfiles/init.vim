@@ -5,11 +5,19 @@ set ruler
 set number
 set relativenumber
 set smartcase
+set scrolloff=4
 
 set wildmenu
 
 set path+=**
-set clipboard=unnamed
+" set clipboard=unnamed
+set clipboard+=unnamedplus   " using system clipboard
+
+filetype plugin on
+set cursorline              " highlight current cursorline
+set noswapfile            " disable creating swap file
+set backupdir=~/.cache/vim " Directory to store backup files.
+
 
 set encoding=utf-8
 
@@ -19,6 +27,8 @@ let python_highlight_all=1
 syntax on
 
 set mouse=a
+
+set wildmode=longest,list   " get bash-like tab completions
 
 " Display white characters
 set list
@@ -80,3 +90,16 @@ au BufRead, BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 "    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
 "    execfile(activate_this, dict(__file__=activate_this))
 "EOF
+"
+"
+" open file in a text by placing text and gf
+nnoremap gf :vert winc f<cr>
+" copies filepath to clipboard by pressing yf
+:nnoremap <silent> yf :let @+=expand('%:p')<CR>
+" copies pwd to clipboard: command yd
+:nnoremap <silent> yd :let @+=expand('%:p:h')<CR>
+" Vim jump to the last position when reopening a file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g'\"" | endif
+endif
