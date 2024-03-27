@@ -14,6 +14,7 @@ tmux
 zsh
 python
 ttf-hack
+ttf-hack-nerd
 yay
 obsidian
 firefox
@@ -23,6 +24,7 @@ openvpn
 xclip
 wl-clipboard
 sublime-text
+exa
 )
 
 # Add sublimetext repo
