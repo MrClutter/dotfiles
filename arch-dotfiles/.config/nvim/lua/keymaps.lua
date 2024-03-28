@@ -3,10 +3,10 @@ local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 
 -- General Keymaps
-map('n', '<F5>', ':set list!<CR>', opts)
+-- map('n', '<F5>', ':set list!<CR>', opts)
+map('n', '<F5>', ':lua require\'dap\'.continue()<CR>', opts)
 
 -- leader key
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
