@@ -28,6 +28,20 @@ if [[ $dystro == *"Ubuntu"* ]]; then
         entr # Watch for changes and run command
         exiftool
         fzf
+        procs
+        rip
+        ripgrip
+        rsync
+        xsel
+        bandwich
+        ctop
+        bpytop
+        glances
+        gping
+        dua-cli
+        dog # (in snap at deg add from github?)
+        mutt
+        ipcalc
     )
     sudo apt-get update && sudo apt-get upgrade
 
